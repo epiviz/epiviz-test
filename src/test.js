@@ -10,10 +10,10 @@ $ = require('jquery')(jsdom.jsdom().parentWindow);
 require('./lib/closure/goog/bootstrap/nodejs');
 require('./epiviz-deps.js');
 
-goog.require('epiviz.datatypes.algorithms.Node');
-goog.require('epiviz.datatypes.algorithms.Tree');
-goog.require('epiviz.datatypes.algorithms.Forest');
-goog.require('epiviz.datatypes.algorithms.TreeComparer');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.Node');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.Tree');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.Forest');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.TreeComparer');
 goog.require('epiviz.test.dom.Node');
 
 goog.require('epiviz.utils.minIndex');

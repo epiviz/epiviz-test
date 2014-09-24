@@ -4,72 +4,72 @@
  * Time: 10:49 AM
  */
 
-goog.require('epiviz.datatypes.algorithms.Node');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.Node');
 
-goog.provide('epiviz.datatypes.algorithms.Tree');
+goog.provide('epiviz.datatypes.algorithms.treeeditdist.Tree');
 
 /**
  * @constructor
  */
-epiviz.datatypes.algorithms.Tree = function(root) {
+epiviz.datatypes.algorithms.treeeditdist.Tree = function(root) {
   /**
-   * @type {?epiviz.datatypes.algorithms.Node}
+   * @type {?epiviz.datatypes.algorithms.treeeditdist.Node}
    * @private
    */
   this._root = root;
 
   /**
    * Computed lazily
-   * @type {?Array.<epiviz.datatypes.algorithms.Node>}
+   * @type {?Array.<epiviz.datatypes.algorithms.treeeditdist.Node>}
    * @private
    */
   this._heavyPath = null;
 
   /**
    * Computed lazily
-   * @type {?Array.<epiviz.datatypes.algorithms.Node>}
+   * @type {?Array.<epiviz.datatypes.algorithms.treeeditdist.Node>}
    * @private
    */
   this._topLight = null;
 
   /**
    * Computed lazily
-   * @type {Object.<string, epiviz.datatypes.algorithms.Node>}
+   * @type {Object.<string, epiviz.datatypes.algorithms.treeeditdist.Node>}
    * @private
    */
   this._nodeMap = null;
 };
 
 /**
- * @type {epiviz.datatypes.algorithms.Tree}
+ * @type {epiviz.datatypes.algorithms.treeeditdist.Tree}
  */
-epiviz.datatypes.algorithms.Tree.EMPTY = new epiviz.datatypes.algorithms.Tree(null);
+epiviz.datatypes.algorithms.treeeditdist.Tree.EMPTY = new epiviz.datatypes.algorithms.treeeditdist.Tree(null);
 
 /**
- * @returns {?epiviz.datatypes.algorithms.Node}
+ * @returns {?epiviz.datatypes.algorithms.treeeditdist.Node}
  */
-epiviz.datatypes.algorithms.Tree.prototype.root = function() { return this._root; };
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.root = function() { return this._root; };
 
 /**
  * @returns {number}
  */
-epiviz.datatypes.algorithms.Tree.prototype.size = function() { return !this._root ? 0 : this._root.descendantCount() + 1; };
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.size = function() { return !this._root ? 0 : this._root.descendantCount() + 1; };
 
 /**
  * @returns {boolean}
  */
-epiviz.datatypes.algorithms.Tree.prototype.isEmpty = function() { return !this._root; };
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.isEmpty = function() { return !this._root; };
 
 /**
  * @returns {string}
  */
-epiviz.datatypes.algorithms.Tree.prototype.id = function() { return this.isEmpty() ? 'empty-tree' : this._root.id(); };
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.id = function() { return this.isEmpty() ? 'empty-tree' : this._root.id(); };
 
 /**
  * @param {string} id
- * @returns {epiviz.datatypes.algorithms.Node}
+ * @returns {epiviz.datatypes.algorithms.treeeditdist.Node}
  */
-epiviz.datatypes.algorithms.Tree.prototype.get = function(id) {
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.get = function(id) {
   if (!this._nodeMap) {
     this._nodeMap = {};
     this.dfs(function(node) {
@@ -81,11 +81,11 @@ epiviz.datatypes.algorithms.Tree.prototype.get = function(id) {
 };
 
 /**
- * @returns {Array.<epiviz.datatypes.algorithms.Node>}
+ * @returns {Array.<epiviz.datatypes.algorithms.treeeditdist.Node>}
  */
-epiviz.datatypes.algorithms.Tree.prototype.heavyPath = function() {
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.heavyPath = function() {
   if (!this._heavyPath) {
-    var pair = epiviz.datatypes.algorithms.Tree._weigh(this);
+    var pair = epiviz.datatypes.algorithms.treeeditdist.Tree._weigh(this);
     this._heavyPath = pair.heavyPath;
     this._topLight = pair.topLight;
   }
@@ -93,11 +93,11 @@ epiviz.datatypes.algorithms.Tree.prototype.heavyPath = function() {
 };
 
 /**
- * @returns {Array.<epiviz.datatypes.algorithms.Node>}
+ * @returns {Array.<epiviz.datatypes.algorithms.treeeditdist.Node>}
  */
-epiviz.datatypes.algorithms.Tree.prototype.topLight = function() {
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.topLight = function() {
   if (!this._topLight) {
-    var pair = epiviz.datatypes.algorithms.Tree._weigh(this);
+    var pair = epiviz.datatypes.algorithms.treeeditdist.Tree._weigh(this);
     this._heavyPath = pair.heavyPath;
     this._topLight = pair.topLight;
   }
@@ -106,10 +106,10 @@ epiviz.datatypes.algorithms.Tree.prototype.topLight = function() {
 
 /**
  * Iterates through all tree using the DFS algorithm.
- * @param {function(epiviz.datatypes.algorithms.Node, number)} callback A function called for each node in the tree;
+ * @param {function(epiviz.datatypes.algorithms.treeeditdist.Node, number)} callback A function called for each node in the tree;
  *   the second parameter is the level (depth) of the node in the tree.
  */
-epiviz.datatypes.algorithms.Tree.prototype.dfs = function(callback) {
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.dfs = function(callback) {
   var recursion = function(node, level) {
     callback(node, level);
     node.children().forEach(function(child) {
@@ -119,7 +119,7 @@ epiviz.datatypes.algorithms.Tree.prototype.dfs = function(callback) {
   recursion(this._root, 0);
 };
 
-epiviz.datatypes.algorithms.Tree.prototype.toString = function() {
+epiviz.datatypes.algorithms.treeeditdist.Tree.prototype.toString = function() {
   var ret = '';
   var prefix = [];
   this.dfs(function(node, level) {
@@ -152,20 +152,20 @@ epiviz.datatypes.algorithms.Tree.prototype.toString = function() {
 };
 
 /**
- * @param {epiviz.datatypes.algorithms.Tree} tree
- * @returns {{heavyPath: Array.<epiviz.datatypes.algorithms.Node>, topLight: Array.<epiviz.datatypes.algorithms.Node>}}
+ * @param {epiviz.datatypes.algorithms.treeeditdist.Tree} tree
+ * @returns {{heavyPath: Array.<epiviz.datatypes.algorithms.treeeditdist.Node>, topLight: Array.<epiviz.datatypes.algorithms.treeeditdist.Node>}}
  * @private
  */
-epiviz.datatypes.algorithms.Tree._weigh = function(tree) {
+epiviz.datatypes.algorithms.treeeditdist.Tree._weigh = function(tree) {
   if (tree.isEmpty()) { return { heavyPath: [], topLight: [] }; }
 
-  /** @type {Array.<epiviz.datatypes.algorithms.Node>} */
+  /** @type {Array.<epiviz.datatypes.algorithms.treeeditdist.Node>} */
   var heavyPath = [tree.root()];
 
-  /** @type {Array.<epiviz.datatypes.algorithms.Node>} */
+  /** @type {Array.<epiviz.datatypes.algorithms.treeeditdist.Node>} */
   var topLight = [];
 
-  /** @type {epiviz.datatypes.algorithms.Node} */
+  /** @type {epiviz.datatypes.algorithms.treeeditdist.Node} */
   var lastNode = heavyPath[0];
   while (lastNode.children().length) {
     var heavyChildIndex = lastNode.heavyChildIndex();

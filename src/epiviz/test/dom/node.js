@@ -4,7 +4,7 @@
  * Time: 2:57 PM
  */
 
-goog.require('epiviz.datatypes.algorithms.Node');
+goog.require('epiviz.datatypes.algorithms.treeeditdist.Node');
 
 goog.require('epiviz.utils.mapCopy');
 
@@ -12,12 +12,12 @@ goog.provide('epiviz.test.dom.Node');
 
 /**
  * @param {HTMLElement} element
- * @extends {epiviz.datatypes.algorithms.Node}
+ * @extends {epiviz.datatypes.algorithms.treeeditdist.Node}
  * @constructor
  */
 epiviz.test.dom.Node = function(element) {
   // Call superclass constructor
-  epiviz.datatypes.algorithms.Node.call(this);
+  epiviz.datatypes.algorithms.treeeditdist.Node.call(this);
 
   /**
    * @type {HTMLElement}
@@ -29,7 +29,7 @@ epiviz.test.dom.Node = function(element) {
 /*
  * Copy methods from upper class
  */
-epiviz.test.dom.Node.prototype = epiviz.utils.mapCopy(epiviz.datatypes.algorithms.Node.prototype);
+epiviz.test.dom.Node.prototype = epiviz.utils.mapCopy(epiviz.datatypes.algorithms.treeeditdist.Node.prototype);
 epiviz.test.dom.Node.constructor = epiviz.test.dom.Node;
 
 /**
@@ -73,6 +73,25 @@ epiviz.test.dom.Node.prototype.absOffset = function() { return Math.sqrt(this.pa
 epiviz.test.dom.Node.prototype.isVisible = function() {
   var $element = $(this._element);
   return !($element.is(':hidden') || $element.css('opacity') == 0 || $element.css('visibility') == 'hidden');
+};
+
+/**
+ * A deep copy of the current node
+ * @returns {epiviz.datatypes.algorithms.treeeditdist.Node}
+ */
+epiviz.test.dom.Node.prototype.copy = function() {
+  var copy = new epiviz.test.dom.Node(this._element);
+  copy._parent = this._parent;
+  copy._children = this._children.map(function(node) {
+    var nodeCopy = node.copy();
+    nodeCopy._parent = copy;
+    return nodeCopy;
+  });
+  copy._descendantCount = this._descendantCount;
+  copy._heavyChildIndex = this._heavyChildIndex;
+  copy._id = this._id;
+
+  return copy;
 };
 
 epiviz.test.dom.Node.prototype.toString = function() {
